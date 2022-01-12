@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 const Header = (props) => {
   return (
     <div>
@@ -8,10 +9,20 @@ const Header = (props) => {
   )
 }
 
-const Content = (props) => {
+const Part = (props) => {
   return (
     <div>
       <p>{props.name} {props.exercise}</p>
+    </div>
+  )
+}
+
+const Content = (props) => {
+  return (
+    <div>
+      <Part name={props.part1[0]} exercise={props.part1[1]}/>
+      <Part name={props.part2[0]} exercise={props.part2[1]}/>
+      <Part name={props.part3[0]} exercise={props.part3[1]}/>
     </div>
   )
 }
@@ -36,9 +47,7 @@ const App = () => {
   return (
     <div>
       <Header course={course} />
-      <Content name={part1} exercise={exercise1} />
-      <Content name={part2} exercise={exercise2} />
-      <Content name={part3} exercise={exercise3} />
+      <Content part1={[part1, exercise1]} part2={[part2, exercise2]} part3={[part3, exercise3]}/>
       <Total total={exercise1 + exercise2 + exercise3} />
     </div>
   )
