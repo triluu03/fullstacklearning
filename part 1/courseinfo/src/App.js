@@ -10,13 +10,7 @@ const Header = (props) => {
   )
 }
 
-const Part = (props) => {
-  return (
-    <div>
-      <p>{props.name} {props.exercise}</p>
-    </div>
-  )
-}
+const Part = (props) => <div><p>{props.name} {props.exercise}</p></div>
 
 const Content = (props) => {
   console.log(props)
