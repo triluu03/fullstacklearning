@@ -71,14 +71,13 @@ const App = () => {
 
   const weather_data = () => {
     axios
-      .get('https://api.openweathermap.org')
+      .get('http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=cbf9b8a46bd33dc75a85e3c775e2d341')
       .then(response => {
         setWeather(response.data)
       })
   }
   useEffect(weather_data, [])
-
-
+  console.log(weather)
 
   const countryToShow = country.filter(country => country.name.common.toLowerCase().includes(search.toLowerCase()))
 
@@ -87,7 +86,6 @@ const App = () => {
     <div>
       <div>find countries <input value={search} onChange={handleSearch}/></div>
       <Countries show={countryToShow} onClick={(event) => setSearch(event.target.value)}/>
-      <Weather show={countryToShow} />
     </div>
   )
 }
