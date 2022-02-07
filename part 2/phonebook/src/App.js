@@ -21,6 +21,28 @@ const PersonForm = (props) => {
   )
 }
 
+const Notification = ({message}) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className='message'>
+      {message}
+    </div>
+  )
+}
+
+const Error = ({message}) => {
+  if (message === null) {
+    return null 
+  }
+  return (
+    <div className='error'>
+      {message}
+    </div>
+  )
+}
+
 const Persons = (props) => {
   return (
     <ul>
@@ -35,6 +57,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
+  const [message, setMessage] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     personService
@@ -57,6 +81,15 @@ const App = () => {
           personService
             .replace(i+1, newPerson)
             .then(setPersons(persons.map(person => person.id !== i+1 ? person : newPerson)))
+            .then(setMessage(`Updated ${newPerson.name}'s number`))
+            .catch(setError(`Information of ${newPerson.name} has already been removed from server`))
+            .catch(setMessage(null))
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
+          setTimeout(() => {
+            setError(null)
+          }, 3000)
         }
         test = false
         setNewName('')
@@ -78,6 +111,10 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        .then(setMessage(`Added ${newPerson.name}`))
+      setTimeout(() => {
+        setMessage(null)
+      }, 3000)
     }
   }
   const handleNameChange = (event) => {
@@ -103,6 +140,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Error message={error} />
+      <Notification message={message} />
       <Filter value={newSearch} onChange={handleSearch} />
       <h2>add a new</h2>
       <PersonForm onSubmit={addPerson} value_name={newName} onChange_name={handleNameChange} value_number={newNumber} onChange_number={handleNumberChange} />
