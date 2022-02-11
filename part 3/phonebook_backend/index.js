@@ -1,7 +1,11 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+
+morgan.token('body', (request, response) => JSON.stringify(request.body))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
     { 
@@ -32,7 +36,54 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/info', (request, response) => {
     const number = persons.length
-    response.send("<p>Phonebook has info for 4 people</p>")
+    const date = new Date()
+    response.send("<p>Phonebook has info for " + JSON.stringify(number) + " people </p> <p>" + date + "</p>")
+})
+
+app.get('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const person = persons.find(p => p.id === id)
+
+  if (person) {
+    res.json(person)
+  } else {
+    res.status(404).end()
+  }
+})
+
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  
+  persons = persons.filter(person => person.id !== id)
+  res.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+  const person = request.body
+  const name = person.name
+  const duplicate = persons.find(person => person.name === name)
+
+  if (!person.name) {
+    return response.status(400).json({
+      error: "person's name is missing"
+    })
+  }
+
+  if (duplicate) {
+    return response.status(400).json({
+      error: "name must be unique"
+    })
+  }
+  
+
+  const newPerson = {
+    id: Math.floor(Math.random()*1000),
+    name: person.name,
+    number: person.number
+  }
+  persons = persons.concat(newPerson)
+
+  response.json(newPerson)
 })
 
 const PORT = 3001
