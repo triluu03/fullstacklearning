@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(express.static('build'))
 
 morgan.token('body', (request, response) => JSON.stringify(request.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
@@ -75,7 +76,6 @@ app.post('/api/persons', (request, response) => {
     })
   }
   
-
   const newPerson = {
     id: Math.floor(Math.random()*1000),
     name: person.name,
