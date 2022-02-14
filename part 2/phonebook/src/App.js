@@ -107,6 +107,7 @@ const App = () => {
       personService
         .create(newPerson)
         .then(newOne => {
+          console.log(newOne)
           setPersons(persons.concat(newOne))
           setNewName('')
           setNewNumber('')
