@@ -1,3 +1,4 @@
+import { set } from 'mongoose'
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 
@@ -54,11 +55,15 @@ const Persons = (props) => {
 
 const App = () => {
   const [persons, setPersons] = useState([])
+
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+
   const [newSearch, setNewSearch] = useState('')
+
   const [message, setMessage] = useState(null)
   const [error, setError] = useState(null)
+
 
   useEffect(() => {
     personService
@@ -68,6 +73,8 @@ const App = () => {
       })
   }, [])
   
+
+// Add New Person
   const addPerson = (event) => {
     event.preventDefault()
     let test = true
@@ -76,14 +83,19 @@ const App = () => {
         if (window.confirm(`${newName.trim()} is already added to phonebook, replace the old number with a new one?`)){
           const newPerson = {
             name: newName.trim(),
-            number: newNumber
+            number: newNumber,
+            id: persons[i].id,
           }
           personService
-            .replace(i+1, newPerson)
-            .then(setPersons(persons.map(person => person.id !== i+1 ? person : newPerson)))
-            .then(setMessage(`Updated ${newPerson.name}'s number`))
-            .catch(setError(`Information of ${newPerson.name} has already been removed from server`))
-            .catch(setMessage(null))
+            .replace(newPerson.id, newPerson)
+            .then(result => {
+              setMessage(`Updated ${newPerson.name}'s number`)
+              setPersons(persons.map(person => person.id !== newPerson.id ? person : newPerson))
+            })
+            .catch(error => {
+              setError(`Information of ${newPerson.name} has already been removed from server`)
+              setMessage(null)
+            })
           setTimeout(() => {
             setMessage(null)
           }, 3000)
@@ -118,6 +130,9 @@ const App = () => {
       }, 3000)
     }
   }
+
+
+// Handle Input
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -128,8 +143,12 @@ const App = () => {
     setNewSearch(event.target.value)
   }
 
+
+
   const personToShow = persons.filter(person => person.name.toLowerCase().includes(newSearch.toLowerCase()))
 
+
+// Remove Person from the database
   const removePerson = (event)  => {
     if (window.confirm(`Delete ${event.target.value}?`)) {
       personService
@@ -138,11 +157,13 @@ const App = () => {
     }
   }
 
+
+// Return frontend
   return (
     <div>
       <h2>Phonebook</h2>
-      <Error message={error} />
       <Notification message={message} />
+      <Error message={error} />
       <Filter value={newSearch} onChange={handleSearch} />
       <h2>add a new</h2>
       <PersonForm onSubmit={addPerson} value_name={newName} onChange_name={handleNameChange} value_number={newNumber} onChange_number={handleNumberChange} />
