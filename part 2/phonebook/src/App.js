@@ -53,6 +53,8 @@ const Persons = (props) => {
   )
 }
 
+
+
 const App = () => {
   const [persons, setPersons] = useState([])
 
@@ -89,19 +91,19 @@ const App = () => {
           personService
             .replace(newPerson.id, newPerson)
             .then(result => {
-              setMessage(`Updated ${newPerson.name}'s number`)
               setPersons(persons.map(person => person.id !== newPerson.id ? person : newPerson))
+              setMessage(`Updated ${newPerson.name}'s number`)
+              setTimeout(() => {
+                setMessage(null)
+              }, 3000)
             })
             .catch(error => {
-              setError(`Information of ${newPerson.name} has already been removed from server`)
+              setError(`${newPerson.name}'s new phone number is not valid`)
               setMessage(null)
+              setTimeout(() => {
+                setError(null)
+              }, 3000)
             })
-          setTimeout(() => {
-            setMessage(null)
-          }, 3000)
-          setTimeout(() => {
-            setError(null)
-          }, 3000)
         }
         test = false
         setNewName('')
@@ -113,7 +115,6 @@ const App = () => {
       const newPerson = {
         name: newName.trim(),
         number: newNumber,
-        id: persons.length + 1
       }
 
       personService
@@ -121,13 +122,19 @@ const App = () => {
         .then(newOne => {
           console.log(newOne)
           setPersons(persons.concat(newOne))
-          setNewName('')
-          setNewNumber('')
+          setMessage(`Added ${newPerson.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
         })
-        .then(setMessage(`Added ${newPerson.name}`))
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
+        .catch(error => {
+          setError(`The person's name has fewer than 3 characters, or the phone number is not valid`)
+          setTimeout(() => {
+            setError(null)
+          }, 3000)
+        })
+      setNewName('')
+      setNewNumber('')
     }
   }
 
