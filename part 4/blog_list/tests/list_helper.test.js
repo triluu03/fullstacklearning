@@ -51,12 +51,14 @@ const blogs = [
     }  
 ]
 
+
 test('dummy return one', () => {
     const blogs = []
 
     const result = listHelper.dummy(blogs)
     expect(result).toBe(1)
 })
+
 
 describe('total likes', () => {
     // Testing empty list
@@ -87,6 +89,7 @@ describe('total likes', () => {
     })
 })
 
+
 describe('favorite blog', () => {
     test('of bigger list is found right', () => {
         const expected_result = {
@@ -99,5 +102,27 @@ describe('favorite blog', () => {
         }    
 
         expect(listHelper.favoriteBlog(blogs)).toEqual(expected_result)
+    })
+})
+
+
+describe('author with the most blogs', () => {
+    test('of bigger list is found right', () => {
+        const expected_result = {
+            author: "Robert C. Martin",
+            blogs: 3
+        }
+        expect(listHelper.mostBlogs(blogs)).toEqual(expected_result)
+    })
+})
+
+
+describe('author with the most likes', () => {
+    test('of bigger list is found right', () => {
+        const expected_result = {
+            author: "Edsger W. Dijkstra",
+            likes: 17
+        }
+        expect(listHelper.mostLikes(blogs)).toEqual(expected_result)
     })
 })
