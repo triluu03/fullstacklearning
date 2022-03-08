@@ -20,4 +20,5 @@ const replace = (id, newObject) => {
     return axios.put(`${baseUrl}/${id}`, newObject)
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default { getAll, create, remove, replace }

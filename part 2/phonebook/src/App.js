@@ -1,4 +1,3 @@
-import { set } from 'mongoose'
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 
@@ -160,7 +159,7 @@ const App = () => {
     if (window.confirm(`Delete ${event.target.value}?`)) {
       personService
         .remove(event.target.id)
-        .then(setPersons(persons.filter(person => person.id != event.target.id)))
+        .then(setPersons(persons.filter(person => person.id !== event.target.id)))
     }
   }
 
