@@ -34,82 +34,120 @@ beforeEach(async () => {
 })
 
 
-// Testing the data type returned
-test('blogs are returned as json', async () => {
-    await api
-        .get('/api/blogs')
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-}, 100000)
 
+describe('checking returned blogs', () => {
+    // Testing the data type returned
+    test('blogs are returned as json', async () => {
+        await api
+            .get('/api/blogs')
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+    }, 100000)
 
-// Testing the ID of the blogs are defined
-test('blogs identifier are named id', async () => {
-    const response = await api.get('/api/blogs')
-    expect(response.body[0].id).toBeDefined()
-    expect(response.body[1].id).toBeDefined()
+    // Testing the ID of the blogs are defined
+    test('blogs identifier are named id', async () => {
+        const response = await api.get('/api/blogs')
+        expect(response.body[0].id).toBeDefined()
+        expect(response.body[1].id).toBeDefined()
+    })
 })
 
 
-// Testing posting new blogs
-test('a new blog can be added', async () => {
-    const newBlog = {
-        title: "Truth About Organic Food",
-        author: "Sze Wing Fung",
-        url: "https://blogs.helsinki.fi/sahoo/2021/11/30/truth-about-organic-food/",
-        likes: 15,
-    }
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+describe('checking adding new blogs', () => {
+    // Testing posting new blogs
+    test('a new blog can be added', async () => {
+        const newBlog = {
+            title: "Truth About Organic Food",
+            author: "Sze Wing Fung",
+            url: "https://blogs.helsinki.fi/sahoo/2021/11/30/truth-about-organic-food/",
+            likes: 15,
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
     
-    const blogsAfter = await api.get('/api/blogs')
-    expect(blogsAfter.body).toHaveLength(testBlogs.length + 1)
+        const blogsAfter = await api.get('/api/blogs')
+        expect(blogsAfter.body).toHaveLength(testBlogs.length + 1)
 
-    const titles = blogsAfter.body.map(b => b.title)
-    expect(titles).toContain(
-        'Truth About Organic Food'
-    )
+        const titles = blogsAfter.body.map(b => b.title)
+        expect(titles).toContain(
+            'Truth About Organic Food'
+        )
+    })
+
+    // Testing missing likes property
+    test('default likes number is 0', async () => {
+        const newBlog = {
+            title: "All-In-One: A Single Solution to Three of the Biggest Conundrums about Reality",
+            author: "Tuomas Ihamuotila",
+            url: "https://blogs.helsinki.fi/sahoo/2021/11/29/all-in-one-a-single-solution-to-three-of-the-biggest-conundrums-about-reality/",
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const response = await api.get('/api/blogs')
+        const addedBlog = response.body.find(blog => blog.title === 'All-In-One: A Single Solution to Three of the Biggest Conundrums about Reality')
+
+        expect(addedBlog.likes).toBe(0)
+    })
+
+    // Testing non-valid title and author field
+    test('missing title and author blog is not added', async () => {
+        const newBlog = {
+            title: "",
+            author: "",
+            url: "https://blogs.helsinki.fi/sahoo/2021/11/30/truth-about-organic-food/",
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+    })
 })
 
 
-// Testing missing likes property
-test('default likes number is 0', async () => {
-    const newBlog = {
-        title: "All-In-One: A Single Solution to Three of the Biggest Conundrums about Reality",
-        author: "Tuomas Ihamuotila",
-        url: "https://blogs.helsinki.fi/sahoo/2021/11/29/all-in-one-a-single-solution-to-three-of-the-biggest-conundrums-about-reality/",
-    }
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+describe('checking deleting blogs', () => {
+    test('a blog can be deleted', async () => {
+        const blogsAtStart = await api.get('/api/blogs')
+        const blogToDelete = blogsAtStart.body[0]
 
-    const response = await api.get('/api/blogs')
-    const addedBlog = response.body.find(blog => blog.title === 'All-In-One: A Single Solution to Three of the Biggest Conundrums about Reality')
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204)
+        
+        const blogsAtEnd = await api.get('/api/blogs')
+        expect(blogsAtEnd.body).toHaveLength(testBlogs.length - 1)
 
-    expect(addedBlog.likes).toBe(0)
+        const titles = blogsAtEnd.body.map(b => b.title)
+        expect(titles).not.toContain(blogToDelete.title)
+    })
 })
 
 
-// Testing non-valid title and author field
-test('missing title and author blog is not added', async () => {
-    const newBlog = {
-        title: "",
-        author: "",
-        url: "https://blogs.helsinki.fi/sahoo/2021/11/30/truth-about-organic-food/",
-    }
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
+describe('updating information of blogs', () => {
+    test('updating the number of likes', async () => {
+        const blogsAtStart = await api.get('/api/blogs')
+        const blogsToUpdate = blogsAtStart.body[0]
+
+        const updatedBlog = {...blogsToUpdate, likes: 100}
+    
+        await api
+            .put(`/api/blogs/${blogsToUpdate.id}`, updatedBlog)
+            .expect(200)
+    })
 })
+
 
 
 afterAll(() => {
