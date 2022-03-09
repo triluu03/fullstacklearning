@@ -143,8 +143,13 @@ describe('updating information of blogs', () => {
         const updatedBlog = {...blogsToUpdate, likes: 100}
     
         await api
-            .put(`/api/blogs/${blogsToUpdate.id}`, updatedBlog)
+            .put(`/api/blogs/${blogsToUpdate.id}`)
+            .send(updatedBlog)
             .expect(200)
+
+        const blogsAtEnd = await api.get('/api/blogs')
+        const newBlog = blogsAtEnd.body.find(blog => blog.id === blogsToUpdate.id)
+        expect(newBlog.likes).toBe(100)
     })
 })
 
