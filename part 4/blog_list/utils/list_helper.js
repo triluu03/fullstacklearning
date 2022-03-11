@@ -32,7 +32,7 @@ const mostBlogs = (blogs) => {
     Object.keys(groupByAuthor).map(key => {
         groupByAuthor[key] = groupByAuthor[key].length
     })
-    
+
     const numberBlogs = Object.values(groupByAuthor)
     const mostBlogs = Math.max(...numberBlogs)
     const desiredAuthor = Object.keys(groupByAuthor).find(key => groupByAuthor[key] === mostBlogs)
@@ -51,9 +51,9 @@ const mostLikes = (blogs) => {
         const arrayLikes = groupByAuthor[key].map(blog => blog.likes)
         groupByAuthor[key] = arrayLikes.reduce((sum, item) => sum + item, 0)
     })
-    
+
     const numberLikes = Object.values(groupByAuthor)
-    
+
     const mostLikes = Math.max(...numberLikes)
     const desiredAuthor = Object.keys(groupByAuthor).find(key => groupByAuthor[key] === mostLikes)
 

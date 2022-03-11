@@ -49,7 +49,7 @@ const blogs = [
         url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
         likes: 2,
         __v: 0
-    }  
+    }
 ]
 
 
@@ -100,7 +100,7 @@ describe('favorite blog', () => {
             url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
             likes: 12,
             __v: 0
-        }    
+        }
 
         expect(listHelper.favoriteBlog(blogs)).toEqual(expected_result)
     })
@@ -110,7 +110,7 @@ describe('favorite blog', () => {
 describe('author with the most blogs', () => {
     test('of bigger list is found right', () => {
         const expected_result = {
-            author: "Robert C. Martin",
+            author: 'Robert C. Martin',
             blogs: 3
         }
         expect(listHelper.mostBlogs(blogs)).toEqual(expected_result)
@@ -121,7 +121,7 @@ describe('author with the most blogs', () => {
 describe('author with the most likes', () => {
     test('of bigger list is found right', () => {
         const expected_result = {
-            author: "Edsger W. Dijkstra",
+            author: 'Edsger W. Dijkstra',
             likes: 17
         }
         expect(listHelper.mostLikes(blogs)).toEqual(expected_result)

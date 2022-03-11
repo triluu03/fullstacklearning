@@ -26,8 +26,14 @@ usersRouter.post('/', async (request, response) => {
         passwordHash,
     })
 
-    const savedUser = await user.save()
-    response.status(201).json(savedUser)
+    try {
+        const savedUser = await user.save()
+        response.status(201).json(savedUser)
+    } catch {
+        return response.status(400).json({
+            error: 'invalid username or password'
+        })
+    }
 })
 
 module.exports = usersRouter
