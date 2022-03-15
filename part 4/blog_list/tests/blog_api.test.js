@@ -219,7 +219,7 @@ describe('checking user validation', () => {
 
 
         const blankPassword = {
-            username: 'triluu03',
+            username: 'testing2',
             name: 'Luu Duc Tri',
             password: '',
         }
