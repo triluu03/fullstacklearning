@@ -28,12 +28,12 @@ const testUsers = [
     {
         username: 'hellas',
         name: 'Arto Hellas',
-        password: 'hellas123',
+        passwordHash: 'hellas123',
     },
     {
         username: 'mluukkai',
         name: 'Matti Luukkainen',
-        password: 'mluukkai223',
+        passwordHash: 'mluukkai223',
     }
 
 ]
@@ -41,17 +41,18 @@ const testUsers = [
 
 // Updating the MongoDB
 beforeEach(async () => {
+    await User.deleteMany({})
+    let userObject = new User(testUsers[0])
+    await userObject.save()
+    userObject = new User(testUsers[1])
+    await userObject.save()
+
     await Blog.deleteMany({})
     let blogObject = new Blog(testBlogs[0])
     await blogObject.save()
     blogObject = new Blog(testBlogs[1])
     await blogObject.save()
 
-    await User.deleteMany({})
-    let userObject = new User(testUsers[0])
-    await userObject.save()
-    userObject = new User(testUsers[1])
-    await userObject.save()
 })
 
 
