@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { createFactory } from 'react/cjs/react.production.min'
 
 import Blog from './components/Blog'
 
@@ -9,13 +10,18 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
   const [logged, setLogged] = useState(false)
 
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
-  // Getting blogs
+  
+
+  // Getting blogs from the database
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
@@ -57,51 +63,87 @@ const App = () => {
   }
 
 
-  // Logout form
-  const logoutForm = () => {
+  // Handling logout
+  const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogUser')
     setLogged(false)
   }
 
 
-  // Login front-end
-  const loginForm = () => {
-    if (logged === false) {
-      return (
-        <div>
-          <h2>Log in to the application</h2>
-          <form onSubmit={handleLogin}>
-            <div>
-              username
-                <input type='text' value={username} name='Username' onChange={({ target }) => setUsername(target.value)} />
-            </div>
-            <div>
-              password
-                <input type='password' value={password} name='Password' onChange={({ target }) => setPassword(target.value)} />
-            </div>
-            <button type='submit'>login</button>
-          </form>
-        </div>
-      )
+  // Handling creating new blogs
+  const handleCreateBlogs = async (event) => {
+    event.preventDefault()
+    const newBlog = {
+      title, author, url
     }
-
-    return (
-      <div>
-        <h2>blogs</h2>
-        <p>{user.name} logged in <button type='button' onClick={logoutForm}>logout</button></p>
-        {blogs.map(blog => 
-          <Blog key={blog.id} blog={blog} />
-        )}
-      </div>
-    )    
+    try {
+      const createdBlog = await blogService.create(newBlog)
+      setBlogs(blogs.concat(createdBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+    } catch(exception) {
+      console.log(exception.message)
+    }
   }
+
+
+  // Login front-end
+  const loginForm = () => (
+    <div>
+      <h2>Log in to the application</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          username
+            <input type='text' value={username} name='Username' onChange={({ target }) => setUsername(target.value)} />
+        </div>
+        <div>
+          password
+            <input type='password' value={password} name='Password' onChange={({ target }) => setPassword(target.value)} />
+        </div>
+        <button type='submit'>login</button>
+      </form>
+    </div>
+  )    
+  
+
+  
+  // Logged in blog form
+  const blogForm = () => (
+    <div>
+      <h2>blogs</h2>
+      <p>{user.name} logged in <button type='button' onClick={handleLogout}>logout</button></p>
+      <h2>create new</h2>
+      <form onSubmit={handleCreateBlogs}>
+        <div>
+          title:
+            <input type='text' value={title} onChange={({ target }) => setTitle(target.value)} />
+        </div>
+        <div>
+          author:
+            <input type='text' value={author} onChange={({ target }) => setAuthor(target.value)}/>
+        </div>
+        <div>
+          url:
+            <input type='text' value={url} onChange={({ target }) => setUrl(target.value)}/>
+        </div>
+        <button type='submit'>create</button>
+      </form>
+      {blogs.map(blog =>
+        <Blog key={blog.id} blog={blog} />
+      )}
+    </div>
+  )
 
 
 
 // Returning the App Front-end
   return (
     <div>
-      {loginForm()}
+      {logged === false ?
+        loginForm() :
+        blogForm()
+      }
     </div>
   )
 }
