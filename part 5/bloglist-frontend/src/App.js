@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { createFactory } from 'react/cjs/react.production.min'
 
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -18,6 +18,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [notification, setNotification] = useState(null)
 
   
 
@@ -41,6 +43,15 @@ const App = () => {
   }, [])
 
 
+  // Setting Notification messages
+  const notify = (message, type='info') => {
+    setNotification({ message, type })
+    setTimeout(() => {
+      setNotification(null)
+    }, 3000)
+  }
+
+
   // Handling login
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -58,7 +69,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch(exception) {
-      console.log('Wrong credentials')
+      setUsername('')
+      setPassword('')
+      notify('wrong username or password', 'alert')
     }
   }
 
@@ -78,12 +91,13 @@ const App = () => {
     }
     try {
       const createdBlog = await blogService.create(newBlog)
+      notify(`a new blog "${createdBlog.title}" by ${createdBlog.author} added`)
       setBlogs(blogs.concat(createdBlog))
       setTitle('')
       setAuthor('')
       setUrl('')
     } catch(exception) {
-      console.log(exception.message)
+      notify('invalid blog entry', 'alert')
     }
   }
 
@@ -92,6 +106,7 @@ const App = () => {
   const loginForm = () => (
     <div>
       <h2>Log in to the application</h2>
+      <Notification notification={notification} />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -112,6 +127,7 @@ const App = () => {
   const blogForm = () => (
     <div>
       <h2>blogs</h2>
+      <Notification notification={notification} />
       <p>{user.name} logged in <button type='button' onClick={handleLogout}>logout</button></p>
       <h2>create new</h2>
       <form onSubmit={handleCreateBlogs}>
