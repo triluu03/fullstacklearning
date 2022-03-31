@@ -88,6 +88,7 @@ const App = () => {
       createBlogRef.current.toggleVisibility()
       notify(`a new blog "${createdBlog.title}" by ${createdBlog.author} added`)
       setBlogs(blogs.concat(createdBlog))
+      console.log(createdBlog.user)
     } catch(exception) {
       notify('invalid blog entry', 'alert')
     }
@@ -128,7 +129,7 @@ const App = () => {
           <h2>blogs</h2>
           <Notification notification={notification} />
           <p>{user.name} logged in <button type='button' onClick={handleLogout}>logout</button></p>
-          <Togglable buttonLabel='new blog' ref={createBlogRef}>
+          <Togglable buttonLabel='create new blog' ref={createBlogRef}>
             <BlogForm createBlogs={handleCreateBlogs} />
           </Togglable>
           {blogs.map(blog =>
