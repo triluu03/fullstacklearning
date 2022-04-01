@@ -88,10 +88,17 @@ const App = () => {
       createBlogRef.current.toggleVisibility()
       notify(`a new blog "${createdBlog.title}" by ${createdBlog.author} added`)
       setBlogs(blogs.concat(createdBlog))
-      console.log(createdBlog.user)
     } catch(exception) {
       notify('invalid blog entry', 'alert')
     }
+  }
+
+
+  // Handling updating blogs
+  const handleUpdateBlogs = async (id, blogObject) => {
+    const updatedBlog = await blogService.update(id, blogObject)
+    console.log(updatedBlog)
+    setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog))
   }
 
 
@@ -133,7 +140,7 @@ const App = () => {
             <BlogForm createBlogs={handleCreateBlogs} />
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateBlog={handleUpdateBlogs} />
           )}
         </div>
       }

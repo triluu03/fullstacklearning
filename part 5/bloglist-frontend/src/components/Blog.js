@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 
-const Blog = ({blog}) => {
+const Blog = ({ blog, updateBlog }) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -11,6 +11,22 @@ const Blog = ({blog}) => {
     setVisible(!visible)
   }
 
+
+
+  // Handle Updating new blogs
+  const changeLikes = () => {
+    const updatedBlog = {
+      title: blog.title,
+      author: blog.author,
+      user: blog.user.id,
+      url: blog.url,
+      likes: blog.likes ? blog.likes + 1 : 1
+    }
+    updateBlog(blog.id, updatedBlog)
+  }
+
+
+  // Blog Style
   const blogStyle = {
     paddingTop: 10, 
     paddingLeft: 2,
@@ -36,7 +52,7 @@ const Blog = ({blog}) => {
           {blog.url} <br />
 
           likes: {blog.likes ? blog.likes : 0}
-          <button>like</button> <br />
+          <button onClick={changeLikes}>like</button> <br />
 
           {blog.user.name}
         </div>  
