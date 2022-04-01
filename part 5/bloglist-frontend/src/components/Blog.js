@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog}) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -10,7 +10,6 @@ const Blog = ({ blog, updateBlog }) => {
   const toggleVisibility = () => {
     setVisible(!visible)
   }
-
 
 
   // Handle Updating new blogs
@@ -23,6 +22,14 @@ const Blog = ({ blog, updateBlog }) => {
       likes: blog.likes ? blog.likes + 1 : 1
     }
     updateBlog(blog.id, updatedBlog)
+  }
+
+
+  // Handle deleting blogs
+  const removeBlog = () => {
+    if (window.confirm(`Remove blog "${blog.title}" by ${blog.author}`)) {
+      deleteBlog(blog.id)
+    }
   }
 
 
@@ -54,7 +61,8 @@ const Blog = ({ blog, updateBlog }) => {
           likes: {blog.likes ? blog.likes : 0}
           <button onClick={changeLikes}>like</button> <br />
 
-          {blog.user.name}
+          {blog.user.name} <br />
+          <button onClick={removeBlog}>remove</button>
         </div>  
       </div>
     </div>

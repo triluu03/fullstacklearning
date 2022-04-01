@@ -97,8 +97,18 @@ const App = () => {
   // Handling updating blogs
   const handleUpdateBlogs = async (id, blogObject) => {
     const updatedBlog = await blogService.update(id, blogObject)
-    console.log(updatedBlog)
     setBlogs(blogs.map(blog => blog.id !== id ? blog : updatedBlog))
+  }
+
+
+  // Handling deleting blogs
+  const handleDeleteBlogs = async id => {
+    try {
+      await blogService.remove(id)
+      setBlogs(blogs.filter(blog => blog.id !== id))
+    } catch(exception) {
+      notify('only the creator of the blog can delete', 'alert')
+    }
   }
 
 
@@ -143,7 +153,7 @@ const App = () => {
             <BlogForm createBlogs={handleCreateBlogs} />
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} updateBlog={handleUpdateBlogs} />
+            <Blog key={blog.id} blog={blog} updateBlog={handleUpdateBlogs} deleteBlog={handleDeleteBlogs} />
           )}
         </div>
       }
