@@ -126,8 +126,11 @@ const App = () => {
   const createBlogRef = useRef()
 
 
+  // Sorting blogs
+  blogs.sort((a, b) => b.likes - a.likes)
 
-// Returning the App Front-end
+
+  // Returning the App Front-end
   return (
     <div>
       {logged === false ?
