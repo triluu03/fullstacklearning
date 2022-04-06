@@ -49,8 +49,7 @@ test('clicking likes button works', () => {
         likes: 12
     }
     const update = jest.fn()
-    const remove = jest.fn()
-    render(<Blog blog={blog} updateBlog={update} deleteBlog={remove} />)
+    render(<Blog blog={blog} updateBlog={update} />)
     const button = screen.getByText('like')
     userEvent.click(button)
     userEvent.click(button)
