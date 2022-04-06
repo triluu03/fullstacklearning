@@ -72,8 +72,6 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
                 </div>
             </div>
         </div>
-
-
     )
 }
 
