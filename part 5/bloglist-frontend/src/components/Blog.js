@@ -43,20 +43,15 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
         marginBottom: 5
     }
 
-    Blog.propTypes = {
-        updateBlog: PropTypes.func.isRequired,
-        deleteBlog: PropTypes.func.isRequired
-    }
-
     return (
         <div>
             <div style={hideWhenVisible}>
-                <div style={blogStyle}>
+                <div style={blogStyle} className='simpleInfo'>
                     "{blog.title}" by {blog.author}
                     <button onClick={toggleVisibility}>view</button>
                 </div>
             </div>
-            <div style={showWhenVisible}>
+            <div style={showWhenVisible} className='detailInfo'>
                 <div style={blogStyle}>
                     "{blog.title}" by {blog.author}
                     <button onClick={toggleVisibility}>hide</button> <br />
@@ -66,7 +61,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
                     likes: {blog.likes ? blog.likes : 0}
                     <button onClick={changeLikes}>like</button> <br />
 
-                    {blog.user.name} <br />
+                    {blog.user ? blog.user.name : null} <br />
                     <button onClick={removeBlog}>remove</button>
                 </div>
             </div>
