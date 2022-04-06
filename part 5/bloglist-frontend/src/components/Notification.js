@@ -2,9 +2,9 @@ import React from 'react'
 
 const Notification = ({ notification }) => {
     if (notification === null) {
-      return null
+        return null
     }
-  
+
     const style = {
       	color: notification.type === 'alert' ? 'red' : 'green',
       	background: 'lightgrey',
@@ -14,12 +14,12 @@ const Notification = ({ notification }) => {
       	padding: 10,
       	marginBottom: 10
     }
-  
+
     return (
       	<div style={style}>
         	{notification.message}
       	</div>
     )
 }
-  
+
 export default Notification

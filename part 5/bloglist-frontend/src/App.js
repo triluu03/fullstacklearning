@@ -19,13 +19,13 @@ const App = () => {
 
   	const [notification, setNotification] = useState(null)
 
-  
+
 
   	// Getting blogs from the database
   	useEffect(() => {
     	blogService.getAll().then(blogs =>
       		setBlogs(blogs)
-    	)  
+    	)
   	}, [])
 
 
@@ -129,7 +129,7 @@ const App = () => {
         		<button type='submit'>login</button>
       		</form>
     	</div>
-  	)    
+  	)
 
 
   	// Creating blog reference
