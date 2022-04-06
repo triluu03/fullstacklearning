@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState } from 'react'
-import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, deleteBlog }) => {
     const [visible, setVisible] = useState(false)
@@ -18,7 +17,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
         const updatedBlog = {
             title: blog.title,
             author: blog.author,
-            user: blog.user.id,
+            user: blog.user ? blog.user.id : null, //This condition is for testing
             url: blog.url,
             likes: blog.likes ? blog.likes + 1 : 1
         }
@@ -45,8 +44,8 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
 
     return (
         <div>
-            <div style={hideWhenVisible}>
-                <div style={blogStyle} className='simpleInfo'>
+            <div style={hideWhenVisible} className='simpleInfo'>
+                <div style={blogStyle}>
                     "{blog.title}" by {blog.author}
                     <button onClick={toggleVisibility}>view</button>
                 </div>
