@@ -37,8 +37,9 @@
   },
   "proxy": "http://localhost:3003",
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
+    "@testing-library/dom": "^8.11.3",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "jest-watch-typeahead": "^0.6.5"
   }
