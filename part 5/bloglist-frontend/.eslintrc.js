@@ -2,7 +2,9 @@
 module.exports = {
     'env': {
         'browser': true,
-        'es6': true
+        'es6': true,
+        'jest/globals': true,
+        'cypress/globals': true
     },
     'parserOptions': {
         'ecmaFeatures': {
@@ -40,6 +42,9 @@ module.exports = {
         'react/prop-types': 0,
         'react/react-in-jsx-scope': 'off'
     },
+    'plugins': [
+        'react', 'jest', 'cypress'
+    ],
     'settings': {
         'react': {
             'version': 'detect'
