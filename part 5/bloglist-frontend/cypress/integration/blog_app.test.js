@@ -53,5 +53,17 @@ describe('Blog app', function() {
             cy.get('.error')
                 .should('contain', 'a new blog "A blog added by cypress" by Mr.Tester added')
         })
+
+        it('Users can like a blog', function() {
+            cy.contains('create new blog').click()
+            cy.get('.titleInput').type('A blog added by cypress')
+            cy.get('.authorInput').type('Mr.Tester')
+            cy.get('.urlInput').type('Not available')
+            cy.contains('save').click()
+
+            cy.contains('view').click()
+            cy.contains('like').click()
+            cy.contains('likes: 1')
+        })
     })
 })
