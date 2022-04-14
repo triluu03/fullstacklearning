@@ -41,6 +41,7 @@ const reducer = (state = initialState, action) => {
 	}
 }
 
+
 export const add = (content) => {
 	return {
 		type: 'ADD',
@@ -49,6 +50,14 @@ export const add = (content) => {
 			id: getId(),
 			votes: 0
 		}
+	}
+}
+
+
+export const vote = (id) => {
+	return {
+		type: 'VOTE',
+		data: { id } 
 	}
 }
 
