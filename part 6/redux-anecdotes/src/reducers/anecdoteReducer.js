@@ -30,10 +30,12 @@ const reducer = (state = initialState, action) => {
 			const changedObject = {
 				...objectToChange, votes: objectToChange.votes + 1
 			}
-			return state.map(a => a.id !== id ? a : changedObject)
+			
+			const newState = state.map(a => a.id !== id ? a : changedObject)
+			newState.sort((a,b) => b.votes - a.votes)
+			return newState
 		case 'ADD':
 			return state.concat(action.data)
-		
 		default:
 			return state
 	}
