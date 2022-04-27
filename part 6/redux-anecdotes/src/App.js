@@ -6,15 +6,13 @@ import Filter from './components/Filter'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 
-import anecdoteService from './services/anecdotes'
+import { initialize } from './reducers/anecdoteReducer'
 
-import { setAnecdotes } from './reducers/anecdoteReducer'
 
 const App = () => {
 	const dispatch = useDispatch()
 	useEffect(() => {
-		anecdoteService
-			.getAll().then(a => dispatch(setAnecdotes(a)))
+		dispatch(initialize())
 	}, [dispatch])
 
 
