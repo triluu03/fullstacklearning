@@ -8,18 +8,13 @@ const reducer = (state = [], action) => {
 	switch(action.type) {
 		case 'VOTE':
 			const id = action.data.id
-			const objectToChange = state.find(n => n.id === id)
-			const changedObject = {
-				...objectToChange, votes: objectToChange.votes + 1
-			}
-			
-			const newState = state.map(a => a.id !== id ? a : changedObject)
+			const newState = state.map(a => a.id !== id ? a : action.data)
 			newState.sort((a,b) => b.votes - a.votes)
 			return newState
 		case 'ADD':
 			return state.concat(action.data)
 		case 'SET':
-			return action.data
+			return action.data.sort((a,b) => b.votes - a.votes)
 		default:
 			return state
 	}
@@ -33,10 +28,10 @@ export const add = (object) => {
 	}
 }
 
-export const vote = (id) => {
+export const modify = (object) => {
 	return {
 		type: 'VOTE',
-		data: { id } 
+		data: object 
 	}
 }
 
@@ -60,5 +55,15 @@ export const createAnecdote = (content) => {
 		dispatch(add(newAnecdote))
 	}
 }
+
+
+export const vote = (id) => {
+	return async dispatch => {
+		const response = await anecdoteService.voteAnecdote(id)
+		dispatch(modify(response))
+	}
+}
+
+
 
 export default reducer
