@@ -7,6 +7,7 @@ const CreateNew = (props) => {
 	const info = useField('text')
 
 
+    // Handling submit new anecdotes
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		props.addNew({
@@ -17,7 +18,8 @@ const CreateNew = (props) => {
 		})
 	}
 
-    
+
+    // Handling reset button
     const handleReset = () => {
         content.reset()
         author.reset()
