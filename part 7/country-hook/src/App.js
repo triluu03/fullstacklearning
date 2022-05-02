@@ -18,7 +18,12 @@ const useField = (type) => {
 const useCountry = (name) => {
 	const [country, setCountry] = useState(null)
 
-	useEffect(() => {})
+	useEffect(() => {
+		axios.get(`https://restcountries.com/v3.1/name/${name}?fullText=true`)
+			.then(response => {
+				setCountry(response.data[0])
+			})
+	}, [name])
 
 	return country
 }
@@ -52,7 +57,7 @@ const App = () => {
 		<div>
 			<form onSubmit={fetch}>
 				<input {...nameInput} />
-				<button>find</button>
+				<button type='submit'>find</button>
 			</form>
 
 			<Country country={country} />
