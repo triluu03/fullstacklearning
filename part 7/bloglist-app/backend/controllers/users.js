@@ -4,44 +4,45 @@ const User = require('../models/user')
 
 // Getting the users
 router.get('/', async (request, response) => {
-    const users = await User
-        .find({})
-        .populate('blogs', { author: 1, title: 1, url: 1, likes: 1 })
+	const users = await User.find({}).populate('blogs', {
+		author: 1,
+		title: 1,
+		url: 1,
+		likes: 1,
+	})
 
-    response.json(users)
+	response.json(users)
 })
-
 
 // Creating new users
 router.post('/', async (request, response) => {
-    const { username, name, password } = request.body
+	const { username, name, password } = request.body
 
-    if (!password || password.length<3) {
-        return response.status(400).json({
-            error: 'invalid password'
-        })
-    }
+	if (!password || password.length < 3) {
+		return response.status(400).json({
+			error: 'invalid password',
+		})
+	}
 
-    const existingUser = await User.findOne({ username })
-    if (existingUser) {
-        return response.status(400).json({
-            error: 'username must be unique'
-        })
-    }
+	const existingUser = await User.findOne({ username })
+	if (existingUser) {
+		return response.status(400).json({
+			error: 'username must be unique',
+		})
+	}
 
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
+	const saltRounds = 10
+	const passwordHash = await bcrypt.hash(password, saltRounds)
 
-    const user = new User({
-        username,
-        name,
-        passwordHash,
-    })
+	const user = new User({
+		username,
+		name,
+		passwordHash,
+	})
 
-    const savedUser = await user.save()
+	const savedUser = await user.save()
 
-    response.status(201).json(savedUser)
+	response.status(201).json(savedUser)
 })
-
 
 module.exports = router
