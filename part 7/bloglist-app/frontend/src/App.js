@@ -5,9 +5,9 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
 
 import blogService from './services/blogs'
-import loginService from './services/login'
 
 import { setNotification } from './reducers/notificationReducer'
 
@@ -17,52 +17,12 @@ const App = () => {
     const [blogs, setBlogs] = useState([])
     const [user, setUser] = useState(null)
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const [logged, setLogged] = useState(false)
 
     // Getting blogs from the database
     useEffect(() => {
         blogService.getAll().then((blogs) => setBlogs(blogs))
     }, [])
-
-    // Loading the logged user from browser's local storage
-    useEffect(() => {
-        const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
-        if (loggedUserJSON) {
-            const user = JSON.parse(loggedUserJSON)
-            setUser(user)
-            setLogged(true)
-            blogService.setToken(user.token)
-        }
-    }, [])
-
-    // Handling login
-    const handleLogin = async (event) => {
-        event.preventDefault()
-        try {
-            const user = await loginService.login({
-                username,
-                password,
-            })
-
-            window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
-            blogService.setToken(user.token)
-            setUser(user)
-            setLogged(true)
-            setUsername('')
-            setPassword('')
-        } catch (exception) {
-            setUsername('')
-            setPassword('')
-            dispatch(
-                setNotification({
-                    message: 'wrong username or password',
-                    type: 'alert',
-                })
-            )
-        }
-    }
 
     // Handling logout
     const handleLogout = () => {
@@ -113,37 +73,6 @@ const App = () => {
         }
     }
 
-    // Login front-end
-    const loginForm = () => (
-        <div>
-            <h2>Log in to the application</h2>
-            <Notification />
-            <form onSubmit={handleLogin}>
-                <div>
-                    username
-                    <input
-                        id='username'
-                        type='text'
-                        value={username}
-                        name='Username'
-                        onChange={({ target }) => setUsername(target.value)}
-                    />
-                </div>
-                <div>
-                    password
-                    <input
-                        id='password'
-                        type='password'
-                        value={password}
-                        name='Password'
-                        onChange={({ target }) => setPassword(target.value)}
-                    />
-                </div>
-                <button type='submit'>login</button>
-            </form>
-        </div>
-    )
-
     // Creating blog reference
     const createBlogRef = useRef()
 
@@ -154,7 +83,7 @@ const App = () => {
     return (
         <div>
             {logged === false ? (
-                loginForm()
+                <LoginForm setUser={setUser} setLogged={setLogged} />
             ) : (
                 <div>
                     <h2>blogs</h2>
