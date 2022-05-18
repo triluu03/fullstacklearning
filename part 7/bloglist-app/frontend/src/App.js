@@ -10,12 +10,16 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import {
+    initializeBlogs,
+    createBlog,
+    deleteBlog,
+    updateBlog,
+} from './reducers/blogReducer'
 
 const App = () => {
     const dispatch = useDispatch()
 
-    const [blogs, setBlogs] = useState([])
     const [user, setUser] = useState(null)
 
     const [logged, setLogged] = useState(false)
@@ -23,7 +27,7 @@ const App = () => {
     // Getting blogs from the database
     useEffect(() => {
         dispatch(initializeBlogs())
-    }, [])
+    }, [dispatch])
 
     // Getting blogs from the redux store
     const reduxBlog = useSelector((state) => state.blogs)
@@ -35,7 +39,7 @@ const App = () => {
     }
 
     // Handling creating new blogs
-    const handleCreateBlogs = async (blogObject) => {
+    const handleCreateBlogs = (blogObject) => {
         try {
             dispatch(createBlog(blogObject))
             createBlogRef.current.toggleVisibility()
@@ -51,15 +55,13 @@ const App = () => {
 
     // Handling updating blogs
     const handleUpdateBlogs = async (id, blogObject) => {
-        const updatedBlog = await blogService.update(id, blogObject)
-        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)))
+        dispatch(updateBlog(id, blogObject))
     }
 
     // Handling deleting blogs
-    const handleDeleteBlogs = async (id) => {
+    const handleDeleteBlogs = (id) => {
         try {
-            await blogService.remove(id)
-            setBlogs(blogs.filter((blog) => blog.id !== id))
+            dispatch(deleteBlog(id))
         } catch (exception) {
             dispatch(
                 setNotification({
