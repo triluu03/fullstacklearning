@@ -7,8 +7,6 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 
-import blogService from './services/blogs'
-
 import { setNotification } from './reducers/notificationReducer'
 import {
     initializeBlogs,
@@ -20,7 +18,7 @@ import {
 const App = () => {
     const dispatch = useDispatch()
 
-    const [user, setUser] = useState(null)
+    const user = useSelector((state) => state.user)
 
     const [logged, setLogged] = useState(false)
 
@@ -75,14 +73,11 @@ const App = () => {
     // Creating blog reference
     const createBlogRef = useRef()
 
-    // Sorting blogs
-    // reduxBlog.sort((a, b) => b.likes - a.likes)
-
     // Returning the App Front-end
     return (
         <div>
             {logged === false ? (
-                <LoginForm setUser={setUser} setLogged={setLogged} />
+                <LoginForm setLogged={setLogged} />
             ) : (
                 <div>
                     <h2>blogs</h2>

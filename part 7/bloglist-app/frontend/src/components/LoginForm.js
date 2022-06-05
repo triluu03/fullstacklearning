@@ -7,8 +7,9 @@ import loginService from '../services/login'
 import blogService from '../services/blogs'
 
 import { setNotification } from '../reducers/notificationReducer'
+import { setUser } from '../reducers/userReducer'
 
-const LoginForm = ({ setUser, setLogged }) => {
+const LoginForm = ({ setLogged }) => {
     const dispatch = useDispatch()
 
     const [username, setUsername] = useState('')
@@ -19,7 +20,7 @@ const LoginForm = ({ setUser, setLogged }) => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON)
-            setUser(user)
+            dispatch(setUser(user))
             setLogged(true)
             blogService.setToken(user.token)
         }
@@ -34,7 +35,7 @@ const LoginForm = ({ setUser, setLogged }) => {
             })
             window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
             blogService.setToken(user.token)
-            setUser(user)
+            dispatch(setUser(user))
             setLogged(true)
             setUsername('')
             setPassword('')
