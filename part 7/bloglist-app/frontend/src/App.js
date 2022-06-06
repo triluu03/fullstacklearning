@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Blog from './components/Blog'
+import Users from './components/Users'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
@@ -14,11 +15,12 @@ import {
     deleteBlog,
     updateBlog,
 } from './reducers/blogReducer'
+import { initializeUsers } from './reducers/usersListReducer'
+
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
 const App = () => {
     const dispatch = useDispatch()
-
-    const user = useSelector((state) => state.user)
 
     const [logged, setLogged] = useState(false)
 
@@ -27,8 +29,15 @@ const App = () => {
         dispatch(initializeBlogs())
     }, [dispatch])
 
-    // Getting blogs from the redux store
-    const reduxBlog = useSelector((state) => state.blogs)
+    // Getting users info from the database
+    useEffect(() => {
+        dispatch(initializeUsers())
+    }, [])
+
+    // Getting blogs, signed in user, and users information from the redux store
+    const blogs = useSelector((state) => state.blogs)
+    const user = useSelector((state) => state.user)
+    const usersList = useSelector((state) => state.usersList)
 
     // Handling logout
     const handleLogout = () => {
@@ -73,14 +82,28 @@ const App = () => {
     // Creating blog reference
     const createBlogRef = useRef()
 
+    const padding = {
+        padding: 5,
+    }
+
     // Returning the App Front-end
     return (
         <div>
             {logged === false ? (
                 <LoginForm setLogged={setLogged} />
             ) : (
-                <div>
+                <BrowserRouter>
+                    <div>
+                        <Link style={padding} to='/'>
+                            home
+                        </Link>
+                        <Link style={padding} to='/users'>
+                            users
+                        </Link>
+                    </div>
+
                     <h2>blogs</h2>
+
                     <Notification />
                     <p>
                         {user.name} logged in{' '}
@@ -88,21 +111,36 @@ const App = () => {
                             logout
                         </button>
                     </p>
-                    <Togglable
-                        buttonLabel='create new blog'
-                        ref={createBlogRef}
-                    >
-                        <BlogForm createBlogs={handleCreateBlogs} />
-                    </Togglable>
-                    {reduxBlog.map((blog) => (
-                        <Blog
-                            key={blog.id}
-                            blog={blog}
-                            updateBlog={handleUpdateBlogs}
-                            deleteBlog={handleDeleteBlogs}
+                    <Routes>
+                        <Route
+                            path='/users'
+                            element={<Users users={usersList} />}
                         />
-                    ))}
-                </div>
+                        <Route
+                            path='/'
+                            element={
+                                <div>
+                                    <Togglable
+                                        buttonLabel='create new blog'
+                                        ref={createBlogRef}
+                                    >
+                                        <BlogForm
+                                            createBlogs={handleCreateBlogs}
+                                        />
+                                    </Togglable>
+                                    {blogs.map((blog) => (
+                                        <Blog
+                                            key={blog.id}
+                                            blog={blog}
+                                            updateBlog={handleUpdateBlogs}
+                                            deleteBlog={handleDeleteBlogs}
+                                        />
+                                    ))}
+                                </div>
+                            }
+                        />
+                    </Routes>
+                </BrowserRouter>
             )}
         </div>
     )
