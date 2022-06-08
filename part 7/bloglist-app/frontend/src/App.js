@@ -7,6 +7,7 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import Individual from './components/Individual'
 
 import { setNotification } from './reducers/notificationReducer'
 import {
@@ -138,6 +139,10 @@ const App = () => {
                                     ))}
                                 </div>
                             }
+                        />
+                        <Route
+                            path='/users/:id'
+                            element={<Individual users={usersList} />}
                         />
                     </Routes>
                 </BrowserRouter>
