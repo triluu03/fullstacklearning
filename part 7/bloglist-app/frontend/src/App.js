@@ -88,6 +88,12 @@ const App = () => {
         padding: 5,
     }
 
+    const headerStyle = {
+        backgroundColor: 'lightGray',
+        paddingTop: 5,
+        paddingBottom: 5,
+    }
+
     // Returning the App Front-end
     return (
         <div>
@@ -95,24 +101,22 @@ const App = () => {
                 <LoginForm setLogged={setLogged} />
             ) : (
                 <BrowserRouter>
-                    <div>
+                    <div style={headerStyle}>
                         <Link style={padding} to='/'>
                             home
                         </Link>
                         <Link style={padding} to='/users'>
                             users
                         </Link>
+                        {user.name} logged in
+                        <button type='button' onClick={handleLogout}>
+                            logout
+                        </button>
                     </div>
 
                     <h2>blogs</h2>
 
                     <Notification />
-                    <p>
-                        {user.name} logged in{' '}
-                        <button type='button' onClick={handleLogout}>
-                            logout
-                        </button>
-                    </p>
                     <Routes>
                         <Route
                             path='/users'
