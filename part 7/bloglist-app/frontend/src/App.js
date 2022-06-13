@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Blog from './components/Blog'
+import BlogList from './components/BlogList'
 import Users from './components/Users'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -130,7 +131,7 @@ const App = () => {
                                         />
                                     </Togglable>
                                     {blogs.map((blog) => (
-                                        <Blog
+                                        <BlogList
                                             key={blog.id}
                                             blog={blog}
                                             updateBlog={handleUpdateBlogs}
@@ -143,6 +144,16 @@ const App = () => {
                         <Route
                             path='/users/:id'
                             element={<Individual users={usersList} />}
+                        />
+                        <Route
+                            path='/blogs/:id'
+                            element={
+                                <Blog
+                                    blogs={blogs}
+                                    updateBlog={handleUpdateBlogs}
+                                    deleteBlog={handleDeleteBlogs}
+                                />
+                            }
                         />
                     </Routes>
                 </BrowserRouter>
