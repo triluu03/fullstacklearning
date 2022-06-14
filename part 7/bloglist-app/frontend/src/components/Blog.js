@@ -14,6 +14,7 @@ const Blog = ({ blogs, updateBlog, deleteBlog }) => {
             user: blog.user ? blog.user.id : null, // This condition is for testing
             url: blog.url,
             likes: blog.likes ? blog.likes + 1 : 1,
+            comments: blog.comments,
         }
         updateBlog(blog.id, updatedBlog)
     }
@@ -27,7 +28,7 @@ const Blog = ({ blogs, updateBlog, deleteBlog }) => {
 
     return (
         <div>
-            <h2>{blog.title}</h2>
+            <h1>{blog.title}</h1>
             <div>
                 <a href={blog.url}>{blog.url}</a>
                 <br />
@@ -35,6 +36,10 @@ const Blog = ({ blogs, updateBlog, deleteBlog }) => {
                 <button onClick={changeLikes}>like</button> <br />
                 added by {blog.user ? blog.user.name : null} <br />
                 <button onClick={removeBlog}>remove</button>
+                <h3>comments</h3>
+                {blog.comments.map((comment) => (
+                    <li key={comment}>{comment}</li>
+                ))}
             </div>
         </div>
     )
