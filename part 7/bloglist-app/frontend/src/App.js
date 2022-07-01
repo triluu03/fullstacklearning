@@ -21,6 +21,8 @@ import { initializeUsers } from './reducers/usersListReducer'
 
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
+import { Button, Container, Navbar, Nav } from 'react-bootstrap'
+
 const App = () => {
     const dispatch = useDispatch()
 
@@ -63,7 +65,7 @@ const App = () => {
     }
 
     // Handling updating blogs
-    const handleUpdateBlogs = async (id, blogObject) => {
+    const handleUpdateBlogs = (id, blogObject) => {
         dispatch(updateBlog(id, blogObject))
     }
 
@@ -96,25 +98,38 @@ const App = () => {
 
     // Returning the App Front-end
     return (
-        <div>
+        <div className='container'>
             {logged === false ? (
                 <LoginForm setLogged={setLogged} />
             ) : (
                 <BrowserRouter>
-                    <div style={headerStyle}>
-                        <Link style={padding} to='/'>
-                            home
-                        </Link>
-                        <Link style={padding} to='/users'>
-                            users
-                        </Link>
-                        {user.name} logged in
-                        <button type='button' onClick={handleLogout}>
-                            logout
-                        </button>
-                    </div>
+                    <Navbar bg='light' expand='lg'>
+                        <Container>
+                            <Navbar.Toggle aria-controls='basic-navbar-nav' />
+                            <Navbar.Collapse id='basic-navbar-nav'>
+                                <Navbar.Brand>
+                                    {user.name} logged in
+                                    <Button
+                                        variant='outline-primary'
+                                        size='sm'
+                                        type='button'
+                                        onClick={handleLogout}
+                                    >
+                                        logout
+                                    </Button>
+                                </Navbar.Brand>
 
-                    <h2>blogs</h2>
+                                <Nav className='me-auto'>
+                                    <Nav.Link style={padding} href='/'>
+                                        Home
+                                    </Nav.Link>
+                                    <Nav.Link style={padding} href='/users'>
+                                        Users
+                                    </Nav.Link>
+                                </Nav>
+                            </Navbar.Collapse>
+                        </Container>
+                    </Navbar>
 
                     <Notification />
                     <Routes>
@@ -126,6 +141,7 @@ const App = () => {
                             path='/'
                             element={
                                 <div>
+                                    <h2>Blogs</h2>
                                     <Togglable
                                         buttonLabel='create new blog'
                                         ref={createBlogRef}
@@ -135,12 +151,7 @@ const App = () => {
                                         />
                                     </Togglable>
                                     {blogs.map((blog) => (
-                                        <BlogList
-                                            key={blog.id}
-                                            blog={blog}
-                                            updateBlog={handleUpdateBlogs}
-                                            deleteBlog={handleDeleteBlogs}
-                                        />
+                                        <BlogList key={blog.id} blog={blog} />
                                     ))}
                                 </div>
                             }

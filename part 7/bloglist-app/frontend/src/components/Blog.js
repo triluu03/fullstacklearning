@@ -2,6 +2,8 @@ import React from 'react'
 
 import { useParams } from 'react-router-dom'
 
+import { Button } from 'react-bootstrap'
+
 const Blog = ({ blogs, updateBlog, deleteBlog }) => {
     const id = useParams().id
     const blog = blogs.find((blog) => blog.id === id)
@@ -33,9 +35,18 @@ const Blog = ({ blogs, updateBlog, deleteBlog }) => {
                 <a href={blog.url}>{blog.url}</a>
                 <br />
                 {blog.likes ? blog.likes : 0} likes
-                <button onClick={changeLikes}>like</button> <br />
+                <Button
+                    variant='outline-primary'
+                    size='sm'
+                    onClick={changeLikes}
+                >
+                    like
+                </Button>{' '}
+                <br />
                 added by {blog.user ? blog.user.name : null} <br />
-                <button onClick={removeBlog}>remove</button>
+                <Button variant='outline-danger' size='sm' onClick={removeBlog}>
+                    remove
+                </Button>
                 <h3>comments</h3>
                 {blog.comments.map((comment) => (
                     <li key={comment}>{comment}</li>
