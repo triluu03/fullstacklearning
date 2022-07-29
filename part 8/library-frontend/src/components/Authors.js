@@ -2,6 +2,7 @@ const Authors = (props) => {
     if (!props.show) {
         return null
     }
+
     const authors = props.authors
 
     return (
