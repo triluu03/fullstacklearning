@@ -1,4 +1,21 @@
 const { ApolloServer, gql } = require('apollo-server')
+const mongoose = require('mongoose')
+
+const Author = require('./models/author')
+const Book = require('./models/book')
+
+const MONGODB_URI =
+    'mongodb+srv://triluu:180302@learnwebdev.4lppr.mongodb.net/libraryApp?retryWrites=true&w=majority'
+console.log('connecting to', MONGODB_URI)
+
+mongoose
+    .connect(MONGODB_URI)
+    .then(() => {
+        console.log('connected to MongoDB')
+    })
+    .catch((error) => {
+        console.log('error connection to MongoDB', error.message)
+    })
 
 const { v1: uuid } = require('uuid')
 
@@ -95,7 +112,7 @@ const typeDefs = gql`
 
     type Book {
         title: String!
-        author: String!
+        author: Author!
         published: Int!
         genres: [String!]!
     }
@@ -120,11 +137,11 @@ const typeDefs = gql`
 
 const resolvers = {
     Query: {
-        bookCount: () => books.length,
-        authorCount: () => authors.length,
-        allBooks: (root, args) => {
+        bookCount: async () => Book.collection.countDocuments(),
+        authorCount: async () => Author.collection.countDocuments(),
+        allBooks: async (root, args) => {
             if (!args.author && !args.genre) {
-                return books
+                return Book.find({})
             }
             const filteredByAuthor = args.author
                 ? books.filter((b) => b.author === args.author)
@@ -149,15 +166,17 @@ const resolvers = {
         },
     },
     Mutation: {
-        addBook: (root, args) => {
-            const book = { ...args, id: uuid() }
-            books = books.concat(book)
-            if (!authors.find((a) => a.name === args.author)) {
-                const author = {
+        addBook: async (root, args) => {
+            const book = new Book({ ...args, id: uuid() })
+            await book.save()
+
+            const author = await Author.findOne({ name: args.author })
+            if (!author) {
+                const author = new Author({
                     name: args.author,
                     id: uuid(),
-                }
-                authors = authors.concat(author)
+                })
+                await author.save()
             }
             return book
         },
