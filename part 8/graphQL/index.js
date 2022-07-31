@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, UserInputError } = require('apollo-server')
 const mongoose = require('mongoose')
 
 const Author = require('./models/author')
@@ -160,18 +160,34 @@ const resolvers = {
                     name: args.author,
                     id: uuid(),
                 })
-                await newAuthor.save()
-                const book = new Book({
-                    ...args,
-                    author: newAuthor,
-                    id: uuid(),
-                })
-                await book.save()
-                return book
+                try {
+                    await newAuthor.save()
+                    const book = new Book({
+                        ...args,
+                        author: newAuthor,
+                        id: uuid(),
+                    })
+                    await book.save()
+                    return book
+                } catch (error) {
+                    throw new UserInputError(error.message, {
+                        invalidArgs: args,
+                    })
+                }
             } else {
-                const book = new Book({ ...args, author: author, id: uuid() })
-                await book.save()
-                return book
+                try {
+                    const book = new Book({
+                        ...args,
+                        author: author,
+                        id: uuid(),
+                    })
+                    await book.save()
+                    return book
+                } catch (error) {
+                    throw new UserInputError(error.message, {
+                        invalidArgs: args,
+                    })
+                }
             }
         },
         editAuthor: async (root, args) => {
@@ -180,10 +196,16 @@ const resolvers = {
                 return null
             }
 
-            author.born = args.setBornTo
-            await author.save()
+            try {
+                author.born = args.setBornTo
+                await author.save()
 
-            return author
+                return author
+            } catch (error) {
+                throw new UserInputError(error.message, {
+                    invalidArgs: args,
+                })
+            }
         },
     },
 }
