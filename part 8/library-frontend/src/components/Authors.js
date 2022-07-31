@@ -24,32 +24,39 @@ const Authors = (props) => {
 
     return (
         <div>
-            <h2>authors</h2>
-            <table>
-                <tbody>
-                    <tr>
-                        <th></th>
-                        <th>born</th>
-                        <th>books</th>
-                    </tr>
-                    {authors.map((a) => (
-                        <tr key={a.name}>
-                            <td>{a.name}</td>
-                            <td>{a.born}</td>
-                            <td>{a.bookCount}</td>
+            <div>
+                <h2>authors</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th>born</th>
+                            <th>books</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                        {authors.map((a) => (
+                            <tr key={a.name}>
+                                <td>{a.name}</td>
+                                <td>{a.born}</td>
+                                <td>{a.bookCount}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             <div>
                 <h2>Set birthyear</h2>
                 <form onSubmit={submit}>
                     <div>
-                        name
-                        <input
+                        <select
                             value={author}
                             onChange={({ target }) => setAuthor(target.value)}
-                        />
+                        >
+                            {authors.map((author) => (
+                                <option key={author.name} value={author.name}>
+                                    {author.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div>
                         born
