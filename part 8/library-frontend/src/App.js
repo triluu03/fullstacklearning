@@ -5,15 +5,19 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 
-import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK, EDIT_AUTHOR } from './queries'
 
 const App = () => {
     const [page, setPage] = useState('authors')
 
     const authorsResult = useQuery(ALL_AUTHORS)
     const booksResult = useQuery(ALL_BOOKS)
+
     const [createBook] = useMutation(CREATE_BOOK, {
         refetchQueries: [{ query: ALL_BOOKS }],
+    })
+    const [editAuthor] = useMutation(EDIT_AUTHOR, {
+        refetchQueries: [{ query: ALL_AUTHORS }],
     })
 
     if (authorsResult.loading || booksResult.loading) {
@@ -31,6 +35,7 @@ const App = () => {
             <Authors
                 show={page === 'authors'}
                 authors={authorsResult.data.allAuthors}
+                editAuthor={editAuthor}
             />
 
             <Books show={page === 'books'} books={booksResult.data.allBooks} />

@@ -1,9 +1,26 @@
+import { useState } from 'react'
+
 const Authors = (props) => {
+    const [author, setAuthor] = useState('')
+    const [born, setBorn] = useState('')
+
     if (!props.show) {
         return null
     }
 
     const authors = props.authors
+
+    const submit = async (event) => {
+        event.preventDefault()
+
+        await props.editAuthor({
+            variables: { name: author, setBornTo: Number(born) },
+        })
+        console.log('updating author...')
+
+        setAuthor('')
+        setBorn('')
+    }
 
     return (
         <div>
@@ -24,6 +41,26 @@ const Authors = (props) => {
                     ))}
                 </tbody>
             </table>
+            <div>
+                <h2>Set birthyear</h2>
+                <form onSubmit={submit}>
+                    <div>
+                        name
+                        <input
+                            value={author}
+                            onChange={({ target }) => setAuthor(target.value)}
+                        />
+                    </div>
+                    <div>
+                        born
+                        <input
+                            value={born}
+                            onChange={({ target }) => setBorn(target.value)}
+                        />
+                    </div>
+                    <button type='submit'>update author</button>
+                </form>
+            </div>
         </div>
     )
 }
