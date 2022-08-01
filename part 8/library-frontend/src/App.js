@@ -13,6 +13,8 @@ const App = () => {
     const authorsResult = useQuery(ALL_AUTHORS)
     const booksResult = useQuery(ALL_BOOKS)
 
+    console.log(booksResult)
+
     const [createBook] = useMutation(CREATE_BOOK, {
         refetchQueries: [{ query: ALL_BOOKS }],
     })
