@@ -1,19 +1,28 @@
-import { useState } from 'react'
-import { useQuery, useMutation } from '@apollo/client'
+import { useEffect, useState } from 'react'
+import { useQuery, useMutation, useApolloClient } from '@apollo/client'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import LoginForm from './components/LoginForm'
 
 import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK, EDIT_AUTHOR } from './queries'
 
 const App = () => {
     const [page, setPage] = useState('authors')
+    const [token, setToken] = useState(null)
+
+    useEffect(() => {
+        const userToken = localStorage.getItem('library-user-token')
+        if (userToken) {
+            setToken(userToken)
+        }
+    }, [])
+
+    const client = useApolloClient()
 
     const authorsResult = useQuery(ALL_AUTHORS)
     const booksResult = useQuery(ALL_BOOKS)
-
-    console.log(booksResult)
 
     const [createBook] = useMutation(CREATE_BOOK, {
         refetchQueries: [{ query: ALL_BOOKS }],
@@ -26,12 +35,28 @@ const App = () => {
         return <div>loading...</div>
     }
 
+    const logout = () => {
+        setToken(null)
+        localStorage.clear()
+        client.resetStore()
+    }
+
+    if (!token) {
+        return (
+            <div>
+                <h2>Login</h2>
+                <LoginForm setToken={setToken} setPage={setPage} />
+            </div>
+        )
+    }
+
     return (
         <div>
             <div>
                 <button onClick={() => setPage('authors')}>authors</button>
                 <button onClick={() => setPage('books')}>books</button>
                 <button onClick={() => setPage('add')}>add book</button>
+                <button onClick={logout}>logout</button>
             </div>
 
             <Authors
