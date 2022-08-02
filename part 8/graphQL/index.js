@@ -49,6 +49,7 @@ const typeDefs = gql`
 
     type Token {
         value: String!
+        favouriteGenre: String!
     }
 
     type Query {
@@ -173,7 +174,10 @@ const resolvers = {
                 id: user._id,
             }
 
-            return { value: jwt.sign(userForToken, JWT_SECRET) }
+            return {
+                value: jwt.sign(userForToken, JWT_SECRET),
+                favouriteGenre: user.favouriteGenre,
+            }
         },
     },
 }

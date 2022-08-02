@@ -14,6 +14,8 @@ const LoginForm = ({ setToken, setPage }) => {
             const token = result.data.login.value
             setToken(token)
             localStorage.setItem('library-user-token', token)
+            const favouriteGenre = result.data.login.favouriteGenre
+            localStorage.setItem('library-user-genre', favouriteGenre)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [result.data])
