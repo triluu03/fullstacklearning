@@ -1,5 +1,8 @@
 const { UserInputError, AuthenticationError } = require('apollo-server')
 
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
+
 const Author = require('./models/author')
 const Book = require('./models/book')
 const User = require('./models/user')
@@ -36,41 +39,37 @@ const resolvers = {
                 throw new AuthenticationError('not authenticated')
             }
 
-            const author = await Author.findOne({ name: args.author })
-            if (!author) {
-                const newAuthor = new Author({
-                    name: args.author,
-                    id: uuid(),
-                })
-                try {
+            let book = new Book({
+                title: args.title,
+                published: args.published,
+                genres: args.genres,
+            })
+
+            try {
+                const author = await Author.findOne({ name: args.author })
+                if (!author) {
+                    const newAuthor = new Author({
+                        name: args.author,
+                        id: uuid(),
+                    })
                     await newAuthor.save()
-                    const book = new Book({
-                        ...args,
-                        author: newAuthor,
-                        id: uuid(),
-                    })
+                    book.author = newAuthor
                     await book.save()
-                    return book
-                } catch (error) {
-                    throw new UserInputError(error.message, {
-                        invalidArgs: args,
-                    })
-                }
-            } else {
-                try {
-                    const book = new Book({
-                        ...args,
-                        author: author,
-                        id: uuid(),
-                    })
+                } else {
+                    book.author = author
                     await book.save()
-                    return book
-                } catch (error) {
-                    throw new UserInputError(error.message, {
-                        invalidArgs: args,
-                    })
                 }
+            } catch (error) {
+                throw new UserInputError(error.message, {
+                    invalidArgs: args,
+                })
             }
+
+            book = await Book.findById(book.id).populate('author')
+
+            pubsub.publish('BOOK_ADDED', book)
+
+            return book
         },
         editAuthor: async (root, args) => {
             const author = await Author.findOne({ name: args.name })
@@ -114,6 +113,11 @@ const resolvers = {
                 value: jwt.sign(userForToken, JWT_SECRET),
                 favouriteGenre: user.favouriteGenre,
             }
+        },
+    },
+    Subscription: {
+        bookAdded: {
+            subscibe: () => pubsub.asyncIterator('BOOK_ADDED'),
         },
     },
 }
