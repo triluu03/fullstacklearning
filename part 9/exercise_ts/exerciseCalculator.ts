@@ -1,3 +1,8 @@
+interface Input {
+    target: number
+    record: Array<number>
+}
+
 interface Result {
     periodLength: number
     trainingDays: number
@@ -6,6 +11,35 @@ interface Result {
     ratingDescription: string
     target: number
     average: number
+}
+
+const parseInput = (args: Array<string>): Input => {
+    if (args.length < 4) throw new Error('Not enough arguments')
+
+    let target: number
+
+    if (!isNaN(Number(args[2]))) {
+        target = Number(args[2])
+    } else {
+        throw new Error('Provided values were not numbers!')
+    }
+
+    let record: Array<number> = []
+    let i = 3
+
+    while (i < args.length) {
+        if (!isNaN(Number(args[i]))) {
+            record.push(Number(args[i]))
+            i++
+        } else {
+            throw new Error('Provided values were not numbers!')
+        }
+    }
+
+    return {
+        target,
+        record,
+    }
 }
 
 const calculateExercises = (record: Array<number>, target: number): Result => {
@@ -47,4 +81,13 @@ const calculateExercises = (record: Array<number>, target: number): Result => {
     }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+try {
+    const { target, record } = parseInput(process.argv)
+    console.log(calculateExercises(record, target))
+} catch (error: unknown) {
+    let errorMessage = 'Something bad happened'
+    if (error instanceof Error) {
+        errorMessage += 'Error: ' + error.message
+    }
+    console.log(errorMessage)
+}
