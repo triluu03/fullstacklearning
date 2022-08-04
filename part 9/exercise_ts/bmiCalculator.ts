@@ -1,4 +1,4 @@
-const calculateBmi = (height: number, weight: number): String => {
+const calculateBmi = (height: number, weight: number): string => {
     const bmi = weight / (height * 0.01) / (height * 0.01)
     if (bmi < 18.5) {
         return 'Underweight (thinness)'
