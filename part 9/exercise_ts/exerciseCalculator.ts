@@ -43,6 +43,15 @@ const parseInput = (args: Array<string>): Input => {
 };
 
 const calculateExercises = (record: Array<number>, target: number): Result => {
+    if (isNaN(Number(target))) {
+        throw new Error('malformatted parameters');
+    }
+    record.forEach((hour) => {
+        if (isNaN(Number(hour))) {
+            throw new Error('malformatted paramters');
+        }
+    });
+
     const periodLength = record.length;
     const trainingDays = record.filter((day) => day !== 0).length;
 
@@ -85,9 +94,11 @@ try {
     const { target, record } = parseInput(process.argv);
     console.log(calculateExercises(record, target));
 } catch (error: unknown) {
-    let errorMessage = 'Something bad happened';
+    let errorMessage = 'Something bad happened. ';
     if (error instanceof Error) {
         errorMessage += 'Error: ' + error.message;
     }
     console.log(errorMessage);
 }
+
+export default calculateExercises;
