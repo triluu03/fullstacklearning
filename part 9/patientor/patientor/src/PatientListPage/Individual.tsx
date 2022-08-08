@@ -20,7 +20,16 @@ const Individual = () => {
         <div>
             <h2>{patient.name}</h2>
             ssh: {patient.ssn} <br />
-            occupation: {patient.occupation} <br />
+            occupation: {patient.occupation} <br /> <br />
+            <h3>entries</h3>
+            {patient.entries.map((entry) => (
+                <div key={entry.id}>
+                    {entry.date}: <i>{entry.description}</i> <br />
+                    {entry.diagnosisCodes?.map((code) => (
+                        <li key={code}>{code}</li>
+                    ))}
+                </div>
+            ))}
         </div>
     );
 };

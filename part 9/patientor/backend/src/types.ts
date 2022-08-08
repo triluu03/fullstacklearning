@@ -10,7 +10,6 @@ export interface Diagnose {
     latin?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface BaseEntry {
     id: string;
     description: string;
@@ -37,7 +36,7 @@ interface HospitalEntry extends BaseEntry {
 interface OccupationalHealthcareEntry extends BaseEntry {
     type: 'OccupationalHealthcare';
     employerName: string;
-    sickLeave: {
+    sickLeave?: {
         startDate: string;
         endDate: string;
     };
@@ -67,4 +66,4 @@ export type NonSsnPatient = Omit<Patient, 'ssn'>;
 
 export type NewPatient = Omit<Patient, 'id'>;
 
-export type PublicPatient = Omit<Patient, 'ssn' | 'entries'>;
+export type PublicPatient = Omit<Patient, 'entries'>;
