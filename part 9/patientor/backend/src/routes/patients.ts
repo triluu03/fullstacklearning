@@ -1,6 +1,7 @@
 import express from 'express';
 
 import patientService from '../services/patientService';
+import { EntryWithoutId } from '../types';
 
 import toNewPatient from '../utils';
 
@@ -23,6 +24,14 @@ router.post('/', (req, res) => {
     } catch (error) {
         res.status(400);
     }
+});
+
+router.post('/:id/entries', (req, res) => {
+    const id: string = req.params.id;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const newEntry: EntryWithoutId = req.body;
+
+    res.send(patientService.addEntries(id, newEntry));
 });
 
 export default router;
