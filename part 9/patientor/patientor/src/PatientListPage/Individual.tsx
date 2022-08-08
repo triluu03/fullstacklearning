@@ -4,6 +4,10 @@ import { useStateValue } from '../state';
 
 import { useParams } from 'react-router-dom';
 
+import MaleIcon from '@mui/icons-material/Male';
+import FemaleIcon from '@mui/icons-material/Female';
+import TransgenderIcon from '@mui/icons-material/Transgender';
+
 const Individual = () => {
     const [{ patients, diagnoses }] = useStateValue();
 
@@ -16,9 +20,25 @@ const Individual = () => {
         return null;
     }
 
+    let genderIcon: JSX.Element;
+
+    switch (patient.gender) {
+        case 'male':
+            genderIcon = <MaleIcon />;
+            break;
+        case 'female':
+            genderIcon = <FemaleIcon />;
+            break;
+        default:
+            genderIcon = <TransgenderIcon />;
+            break;
+    }
+
     return (
         <div>
-            <h2>{patient.name}</h2>
+            <h2>
+                {patient.name} {genderIcon}
+            </h2>
             ssh: {patient.ssn} <br />
             occupation: {patient.occupation} <br /> <br />
             <h3>entries</h3>
