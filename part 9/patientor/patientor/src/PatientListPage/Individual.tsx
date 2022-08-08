@@ -5,7 +5,7 @@ import { useStateValue } from '../state';
 import { useParams } from 'react-router-dom';
 
 const Individual = () => {
-    const [{ patients }] = useStateValue();
+    const [{ patients, diagnoses }] = useStateValue();
 
     const { id } = useParams<{ id: string }>();
     const patient: Patient | undefined = Object.values(patients).find(
@@ -26,7 +26,14 @@ const Individual = () => {
                 <div key={entry.id}>
                     {entry.date}: <i>{entry.description}</i> <br />
                     {entry.diagnosisCodes?.map((code) => (
-                        <li key={code}>{code}</li>
+                        <li key={code}>
+                            {code}:{' '}
+                            {
+                                Object.values(diagnoses).find(
+                                    (d) => d.code === code
+                                )?.name
+                            }
+                        </li>
                     ))}
                 </div>
             ))}
