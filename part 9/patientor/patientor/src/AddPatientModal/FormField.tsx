@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+
 import { ErrorMessage, Field, FieldProps, FormikProps } from 'formik';
+
 import {
     Select,
     FormControl,
@@ -7,7 +9,9 @@ import {
     TextField as TextFieldMUI,
     Typography,
 } from '@material-ui/core';
+
 import { Diagnosis, Gender } from '../types';
+
 import { InputLabel } from '@material-ui/core';
 import Input from '@material-ui/core/Input';
 
@@ -69,6 +73,7 @@ export const TextField = ({ field, label, placeholder }: TextProps) => (
 /*
   for exercises 9.24.-
 */
+
 interface NumberProps extends FieldProps {
     label: string;
     min: number;
