@@ -8,8 +8,10 @@ import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 
+import EntryDetails from './EntryDetails';
+
 const Individual = () => {
-    const [{ patients, diagnoses }] = useStateValue();
+    const [{ patients }] = useStateValue();
 
     const { id } = useParams<{ id: string }>();
     const patient: Patient | undefined = Object.values(patients).find(
@@ -43,19 +45,7 @@ const Individual = () => {
             occupation: {patient.occupation} <br /> <br />
             <h3>entries</h3>
             {patient.entries.map((entry) => (
-                <div key={entry.id}>
-                    {entry.date}: <i>{entry.description}</i> <br />
-                    {entry.diagnosisCodes?.map((code) => (
-                        <li key={code}>
-                            {code}:{' '}
-                            {
-                                Object.values(diagnoses).find(
-                                    (d) => d.code === code
-                                )?.name
-                            }
-                        </li>
-                    ))}
-                </div>
+                <EntryDetails entry={entry} key={entry.id} />
             ))}
         </div>
     );
