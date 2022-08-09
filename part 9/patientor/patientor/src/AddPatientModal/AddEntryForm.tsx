@@ -52,6 +52,7 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
                 if (!values.specialist) {
                     errors.specialist = requiredError;
                 }
+                return errors;
             }}
         >
             {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
